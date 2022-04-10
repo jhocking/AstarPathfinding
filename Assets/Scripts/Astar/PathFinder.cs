@@ -10,34 +10,32 @@ namespace Astar
         private int finX;
         private int finY;
 
-        public static int[] walkableValues;
+        // a 2d array of different values representing map tiles
+		// and the values that can be part of the path (ie. are walkable)
         private int[,] level;
+        private int[] walkableValues;
 
         private Dictionary<string, PathNode> openList;
         private Dictionary<string, PathNode> closedList;
 
-        private List<Vector2Int> path;
+        // a list of coordinates that's the shortest path
+        public List<Vector2Int> Path { get; private set; }
 
-        // returns a list of points in the path; the list is empty if it's imposssible to find a path 
-        public static List<Vector2Int> Do(int xIni, int yIni, int xFin, int yFin, int[,] lvlData)
-        {
-            if (walkableValues == null)
-            {
-                walkableValues = new int[] {0}; // default in case it hasn't been set yet
-            }
-            var finder = new PathFinder(xIni, yIni, xFin, yFin, lvlData);
-            return finder.path;
-        }
-
-        // Constructor
-        private PathFinder(int xIni, int yIni, int xFin, int yFin, int[,] lvlData)
+        private PathFinder(int xIni, int yIni, int xFin, int yFin, int[,] lvlData, int[] walkable = null)
         {
             finX = xFin;
             finY = yFin;
             level = lvlData;
+
+            walkableValues = walkable;
+            if (walkableValues == null)
+            {
+                walkableValues = new int[] { 0 }; // default in case it hasn't been set
+            }
+
             openList = new Dictionary<string, PathNode>();
             closedList = new Dictionary<string, PathNode>();
-            path = new List<Vector2Int>();
+            Path = new List<Vector2Int>();
 
             // first node is the starting point
             var node = new PathNode(xIni, yIni, 0, 0, null);
@@ -133,7 +131,7 @@ namespace Astar
         private void RetracePath(PathNode node)
         {
             var step = new Vector2Int(node.x, node.y);
-            path.Add(step);
+            Path.Add(step);
 
             if (node.g > 0)
             {
