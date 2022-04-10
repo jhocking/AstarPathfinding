@@ -6,7 +6,7 @@ namespace Astar
         public readonly int y;
         public readonly float g;
         public readonly float h;
-        public readonly PathNode parentNode;
+        public readonly PathNode parent;
 
         public PathNode(int xPos, int yPos, float gVal, float hVal, PathNode link)
         {
@@ -14,7 +14,7 @@ namespace Astar
             y = yPos;
             g = gVal;
             h = hVal;
-            parentNode = link;
+            parent = link;
         }
     }
 }

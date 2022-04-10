@@ -5,15 +5,21 @@ using Astar;
 
 public class DemoMain : MonoBehaviour
 {
-    // Start is called before the first frame update
+    private int[] walkableValues;
+    private int[,] levelData;
+
     void Start()
     {
-        
-    }
+        walkableValues = new int[] {1, 2};
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        levelData = new int[,] {
+            {1, 1, 1, 1, 5, 1, 2, 2},
+            {6, 6, 6, 1, 5, 1, 5, 2},
+            {2, 2, 1, 1, 5, 1, 5, 2},
+            {2, 2, 1, 1, 5, 1, 5, 2},
+            {2, 2, 6, 6, 5, 1, 5, 2},
+            {2, 2, 1, 1, 5, 1, 5, 2},
+            {2, 2, 1, 1, 1, 1, 5, 2},
+        };
     }
 }

@@ -12,7 +12,7 @@ namespace Astar
 
         // a 2d array of different values representing map tiles
 		// and the values that can be part of the path (ie. are walkable)
-        private int[,] level;
+        private int[,] levelData;
         private int[] walkableValues;
 
         private Dictionary<string, PathNode> openList;
@@ -25,7 +25,7 @@ namespace Astar
         {
             finX = xFin;
             finY = yFin;
-            level = lvlData;
+            levelData = lvlData;
 
             walkableValues = walkable;
             if (walkableValues == null)
@@ -90,13 +90,13 @@ namespace Astar
 
                     // make sure on the grid and not current node
                     // https://stackoverflow.com/questions/9404683/how-to-get-the-length-of-row-column-of-multidimensional-array-in-c
-                    if ((col >= 0 && col < level.GetLength(0)) && (row >= 0 && row < level.GetLength(1)) && (i != 0 || j != 0))
+                    if ((col >= 0 && col < levelData.GetLength(0)) && (row >= 0 && row < levelData.GetLength(1)) && (i != 0 || j != 0))
                     {
                         var key = $"{col} {row}";
 
                         // if walkable, not on closed list, and not already on open list - add to open list
                         // https://www.geeksforgeeks.org/c-sharp-check-if-an-array-contain-the-elements-that-match-the-specified-conditions/
-                        if (Array.Exists(walkableValues, e => e == level[row, col]) && !closedList.ContainsKey(key) && !openList.ContainsKey(key))
+                        if (Array.Exists(walkableValues, e => e == levelData[row, col]) && !closedList.ContainsKey(key) && !openList.ContainsKey(key))
                         {
 
                             // diagonals have greater movement cost
@@ -135,7 +135,7 @@ namespace Astar
 
             if (node.g > 0)
             {
-                RetracePath(node.parentNode);
+                RetracePath(node.parent);
             }
         }
 
