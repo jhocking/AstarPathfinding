@@ -8,6 +8,8 @@ public class DraggableObject : MonoBehaviour
 {
     public event Action OnEndDrag;
 
+    private bool isDragging;
+
     private Camera cam;
 
 	void Awake()
@@ -15,17 +17,21 @@ public class DraggableObject : MonoBehaviour
         cam = Camera.main;
     }
 
-	void OnMouseOver()
-    {
-        if (Input.GetMouseButton(0))
-        {
+    void Update() {
+        if (isDragging) {
             var mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
             this.transform.position = new Vector3(mousePos.x - .5f, mousePos.y - .5f, 0);
         }
     }
 
+    void OnMouseDown()
+    {
+        isDragging = true;
+    }
+
     void OnMouseUp()
     {
+        isDragging = false;
         OnEndDrag?.Invoke();
     }
 }

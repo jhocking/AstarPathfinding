@@ -21,7 +21,7 @@ namespace Astar
         // a list of coordinates that's the shortest path
         public List<Vector2Int> Path { get; private set; }
 
-        private PathFinder(int xIni, int yIni, int xFin, int yFin, int[,] lvlData, int[] walkable = null)
+        public PathFinder(int xIni, int yIni, int xFin, int yFin, int[,] lvlData, int[] walkable = null)
         {
             finX = xFin;
             finY = yFin;
@@ -96,7 +96,7 @@ namespace Astar
 
                         // if walkable, not on closed list, and not already on open list - add to open list
                         // https://www.geeksforgeeks.org/c-sharp-check-if-an-array-contain-the-elements-that-match-the-specified-conditions/
-                        if (Array.Exists(walkableValues, e => e == levelData[row, col]) && !closedList.ContainsKey(key) && !openList.ContainsKey(key))
+                        if (Array.Exists(walkableValues, e => e == levelData[col, row]) && !closedList.ContainsKey(key) && !openList.ContainsKey(key))
                         {
 
                             // diagonals have greater movement cost

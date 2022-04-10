@@ -87,6 +87,7 @@ public class DemoMain : MonoBehaviour
 
         var pathRoot = new GameObject("Path");
         pathRoot.transform.SetParent(this.transform);
+        DoPathfinding();
 
         // remove the template object once no longer needed
         Destroy(tileObj);
@@ -101,6 +102,17 @@ public class DemoMain : MonoBehaviour
 
         tmp = endTile.transform.position;
         endTile.transform.position = new Vector3((int)tmp.x, (int)tmp.y, 0);
+
+        DoPathfinding();
+    }
+
+    private void DoPathfinding()
+    {
+        var start = startTile.transform.position;
+        var end = endTile.transform.position;
+        var finder = new PathFinder((int)start.x, (int)start.y, (int)end.x, (int)end.y, levelData, walkableValues);
+        var path = finder.Path;
+        Debug.Log(path.Count);
     }
 
 }
