@@ -29,8 +29,11 @@ public class DemoMain : MonoBehaviour
 
         // create template object that will be instantiated repeatedly
         var tileObj = new GameObject("Tile");
+        var blankImage = new Texture2D(1, 1);
+        blankImage.SetPixel(0, 0, Color.white);
+        blankImage.Apply();
         var blankTile = tileObj.AddComponent<SpriteRenderer>();
-        blankTile.sprite = Sprite.Create(new Texture2D(1, 1), new Rect(0, 0, 1, 1), Vector2.zero, 1);
+        blankTile.sprite = Sprite.Create(blankImage, new Rect(0, 0, 1, 1), Vector2.zero, 1);
 
         // create tile map
         var mapRoot = new GameObject("Map");
@@ -47,10 +50,10 @@ public class DemoMain : MonoBehaviour
                 switch (levelData[i, j])
                 {
                     case 1:
-                        tile.color = new Color(.9f, 1, .9f);
+                        tile.color = new Color(.9f, .95f, .9f);
                         break;
                     case 2:
-                        tile.color = new Color(1, .9f, .9f);
+                        tile.color = new Color(.95f, .9f, .85f);
                         break;
                     case 5:
                         tile.color = new Color(.2f, .2f, 0);
@@ -64,11 +67,15 @@ public class DemoMain : MonoBehaviour
 
         startTile = Instantiate(blankTile);
         startTile.gameObject.name = "Start";
+        var startDrag = startTile.gameObject.AddComponent<DraggableObject>();
+        startDrag.OnEndDrag += PlaceTiles;
         startTile.transform.position = Vector3.zero;
         startTile.color = Color.green;
 
         endTile = Instantiate(blankTile);
         endTile.gameObject.name = "End";
+        var endDrag = endTile.gameObject.AddComponent<DraggableObject>();
+        endDrag.OnEndDrag += PlaceTiles;
         endTile.transform.position = new Vector3(width - 1, height - 1, 0);
         endTile.color = Color.red;
 
@@ -83,6 +90,17 @@ public class DemoMain : MonoBehaviour
 
         // remove the template object once no longer needed
         Destroy(tileObj);
+    }
+
+    private void PlaceTiles()
+    {
+        Vector3 tmp;
+
+        tmp = startTile.transform.position;
+        startTile.transform.position = new Vector3((int)tmp.x, (int)tmp.y, 0);
+
+        tmp = endTile.transform.position;
+        endTile.transform.position = new Vector3((int)tmp.x, (int)tmp.y, 0);
     }
 
 }
