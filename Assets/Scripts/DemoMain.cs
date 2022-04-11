@@ -68,6 +68,8 @@ public class DemoMain : MonoBehaviour
 
         startTile = Instantiate(blankTile);
         startTile.gameObject.name = "Start";
+        var startBox = startTile.gameObject.AddComponent<BoxCollider>();
+        startBox.size = Vector3.one;
         var startDrag = startTile.gameObject.AddComponent<DraggableObject>();
         startDrag.OnStartDrag += DisposeOldPath;
         startDrag.OnEndDrag += PlaceTiles;
@@ -76,6 +78,8 @@ public class DemoMain : MonoBehaviour
 
         endTile = Instantiate(blankTile);
         endTile.gameObject.name = "End";
+        var endBox = endTile.gameObject.AddComponent<BoxCollider>();
+        endBox.size = Vector3.one;
         var endDrag = endTile.gameObject.AddComponent<DraggableObject>();
         endDrag.OnStartDrag += DisposeOldPath;
         endDrag.OnEndDrag += PlaceTiles;
@@ -90,7 +94,7 @@ public class DemoMain : MonoBehaviour
 
         pathRoot = new GameObject("Path");
         pathRoot.transform.SetParent(this.transform);
-        StartCoroutine(ThreadedDoPathfinding());
+        DoPathfinding();
 
         // remove the template object once no longer needed
         Destroy(tileObj);
@@ -106,7 +110,18 @@ public class DemoMain : MonoBehaviour
         tmp = endTile.transform.position;
         endTile.transform.position = new Vector3((int)tmp.x, (int)tmp.y, 0);
 
+        DoPathfinding();
+    }
+
+    private void DoPathfinding() {
+#if UNITY_WEBGL
+        var start = startTile.transform.position;
+        var end = endTile.transform.position;
+        var finder = new PathFinder((int)start.x, (int)start.y, (int)end.x, (int)end.y, levelData, walkableValues);
+        ConstructNewPath(finder.Path);
+#else
         StartCoroutine(ThreadedDoPathfinding());
+#endif
     }
 
     // calculate map in separate thread, then generate mesh in unity thread

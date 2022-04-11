@@ -108,7 +108,7 @@ namespace Astar
 
                             // calculate heuristic value
                             var h = (col - finX) * (col - finX) + (row - finY) * (row - finY);
-                            // slightly different path results from:
+                            // TODO slightly different path results from:
                             //var h = (Mathf.Abs(col - finX)) + (Mathf.Abs(row - finY)) * 10;
 
                             var found = new PathNode(col, row, g, h, curNode);
