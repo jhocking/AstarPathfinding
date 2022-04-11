@@ -1,5 +1,5 @@
 # AstarPathfinding
-WebGL build at https://jhocking.itch.io/state-machine-ai
+WebGL build at https://jhocking.itch.io/astar-pathfinding
 
 Here's a library for and demo of A* on a 2D grid. Many years ago I had programmed a pathfinding library in AS3 to use in Flash, and I decided to port it to C# for use in Unity. Click and drag the green and red squares in the interactive demo to see the pathfinding algorithm in action.
 
