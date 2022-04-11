@@ -9,6 +9,8 @@ public class DemoMain : MonoBehaviour
     private int[] walkableValues;
     private int[,] levelData;
 
+    private bool only4way;
+
     private SpriteRenderer startTile;
     private SpriteRenderer endTile;
 
@@ -27,6 +29,8 @@ public class DemoMain : MonoBehaviour
             {2, 2, 1, 1, 5, 1, 5, 2},
             {2, 2, 1, 1, 1, 1, 5, 2},
         };
+
+        only4way = false;
 
         // create template object that will be instantiated repeatedly
         var tileObj = new GameObject("Tile");
@@ -100,7 +104,22 @@ public class DemoMain : MonoBehaviour
         Destroy(tileObj);
     }
 
-    private void PlaceTiles()
+    // toggle between 4 and 8 way movement
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            only4way = !only4way;
+            DisposeOldPath();
+            DoPathfinding();
+        }
+    }
+	void OnGUI()
+    {
+        GUI.Label(new Rect(10, 10, 120, 20), only4way ? "4 way movement" : "8 way movement");
+    }
+
+	private void PlaceTiles()
     {
         Vector3 tmp;
 
@@ -117,7 +136,7 @@ public class DemoMain : MonoBehaviour
 #if UNITY_WEBGL
         var start = startTile.transform.position;
         var end = endTile.transform.position;
-        var finder = new PathFinder((int)start.x, (int)start.y, (int)end.x, (int)end.y, false, levelData, walkableValues);
+        var finder = new PathFinder((int)start.x, (int)start.y, (int)end.x, (int)end.y, only4way, levelData, walkableValues);
         ConstructNewPath(finder.Path);
 #else
         StartCoroutine(ThreadedDoPathfinding());
@@ -135,7 +154,7 @@ public class DemoMain : MonoBehaviour
         var end = endTile.transform.position;
 
         new Thread(() => {
-            var finder = new PathFinder((int)start.x, (int)start.y, (int)end.x, (int)end.y, false, levelData, walkableValues);
+            var finder = new PathFinder((int)start.x, (int)start.y, (int)end.x, (int)end.y, only4way, levelData, walkableValues);
             path = finder.Path;
 
             done = true;
