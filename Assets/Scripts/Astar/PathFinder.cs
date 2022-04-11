@@ -9,6 +9,7 @@ namespace Astar
     {
         private int finX;
         private int finY;
+        private bool only4way; // 4 or 8 way movement?
 
         // a 2d array of different values representing map tiles
 		// and the values that can be part of the path (ie. are walkable)
@@ -21,10 +22,11 @@ namespace Astar
         // a list of coordinates that's the shortest path
         public List<Vector2Int> Path { get; private set; }
 
-        public PathFinder(int xIni, int yIni, int xFin, int yFin, int[,] lvlData, int[] walkable = null)
+        public PathFinder(int xIni, int yIni, int xFin, int yFin, bool do4way, int[,] lvlData, int[] walkable = null)
         {
             finX = xFin;
             finY = yFin;
+            only4way = do4way;
             levelData = lvlData;
 
             walkableValues = walkable;
@@ -79,8 +81,7 @@ namespace Astar
                 endNode = curNode;
             }
 
-            // check each of the 8 adjacent squares
-            // TODO adjust to no cutting corners
+            // check each of the adjacent squares
             for (var i = -1; i < 2; i++)
             {
                 for (var j = -1; j < 2; j++)
@@ -88,9 +89,10 @@ namespace Astar
                     var col = curNode.x + i;
                     var row = curNode.y + j;
 
-                    // make sure on the grid and not current node
+                    // make sure is a neighboring (not current) node and is on the grid
                     // https://stackoverflow.com/questions/9404683/how-to-get-the-length-of-row-column-of-multidimensional-array-in-c
-                    if ((col >= 0 && col < levelData.GetLength(0)) && (row >= 0 && row < levelData.GetLength(1)) && (i != 0 || j != 0))
+                    bool neighbor = only4way ? (i == 0 && j != 0) || (i != 0 && j == 0) : (i != 0 || j != 0); // 4 or 8 way movement?
+                    if (neighbor && (col >= 0 && col < levelData.GetLength(0)) && (row >= 0 && row < levelData.GetLength(1)))
                     {
                         var key = $"{col} {row}";
 

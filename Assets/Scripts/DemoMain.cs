@@ -117,7 +117,7 @@ public class DemoMain : MonoBehaviour
 #if UNITY_WEBGL
         var start = startTile.transform.position;
         var end = endTile.transform.position;
-        var finder = new PathFinder((int)start.x, (int)start.y, (int)end.x, (int)end.y, levelData, walkableValues);
+        var finder = new PathFinder((int)start.x, (int)start.y, (int)end.x, (int)end.y, false, levelData, walkableValues);
         ConstructNewPath(finder.Path);
 #else
         StartCoroutine(ThreadedDoPathfinding());
@@ -135,7 +135,7 @@ public class DemoMain : MonoBehaviour
         var end = endTile.transform.position;
 
         new Thread(() => {
-            var finder = new PathFinder((int)start.x, (int)start.y, (int)end.x, (int)end.y, levelData, walkableValues);
+            var finder = new PathFinder((int)start.x, (int)start.y, (int)end.x, (int)end.y, false, levelData, walkableValues);
             path = finder.Path;
 
             done = true;
