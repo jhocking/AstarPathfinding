@@ -10,6 +10,7 @@ public class DemoMain : MonoBehaviour
     private int[,] levelData;
 
     private bool only4way;
+    private Vector2 dragOffset;
 
     private SpriteRenderer startTile;
     private SpriteRenderer endTile;
@@ -29,8 +30,6 @@ public class DemoMain : MonoBehaviour
             {2, 2, 1, 1, 5, 1, 5, 2},
             {2, 2, 1, 1, 1, 1, 5, 2},
         };
-
-        only4way = false;
 
         // create template object that will be instantiated repeatedly
         var tileObj = new GameObject("Tile");
@@ -70,25 +69,32 @@ public class DemoMain : MonoBehaviour
             }
         }
 
+        only4way = false;
+        dragOffset = new Vector2(-.5f, -.5f);
+
         startTile = Instantiate(blankTile);
         startTile.gameObject.name = "Start";
+        startTile.transform.position = Vector3.zero;
+        startTile.color = Color.green;
+
         var startBox = startTile.gameObject.AddComponent<BoxCollider>();
         startBox.size = Vector3.one;
         var startDrag = startTile.gameObject.AddComponent<DraggableObject>();
         startDrag.OnStartDrag += DisposeOldPath;
         startDrag.OnEndDrag += PlaceTiles;
-        startTile.transform.position = Vector3.zero;
-        startTile.color = Color.green;
+        startDrag.offset = dragOffset;
 
         endTile = Instantiate(blankTile);
         endTile.gameObject.name = "End";
+        endTile.transform.position = new Vector3(width - 1, height - 1, 0);
+        endTile.color = Color.red;
+
         var endBox = endTile.gameObject.AddComponent<BoxCollider>();
         endBox.size = Vector3.one;
         var endDrag = endTile.gameObject.AddComponent<DraggableObject>();
         endDrag.OnStartDrag += DisposeOldPath;
         endDrag.OnEndDrag += PlaceTiles;
-        endTile.transform.position = new Vector3(width - 1, height - 1, 0);
-        endTile.color = Color.red;
+        endDrag.offset = dragOffset;
 
         pathDot = Instantiate(blankTile);
         pathDot.gameObject.name = "Dot";
@@ -124,10 +130,10 @@ public class DemoMain : MonoBehaviour
         Vector3 tmp;
 
         tmp = startTile.transform.position;
-        startTile.transform.position = new Vector3((int)tmp.x, (int)tmp.y, 0);
+        startTile.transform.position = new Vector3((int)(tmp.x - dragOffset.x), (int)(tmp.y - dragOffset.y), 0);
 
         tmp = endTile.transform.position;
-        endTile.transform.position = new Vector3((int)tmp.x, (int)tmp.y, 0);
+        endTile.transform.position = new Vector3((int)(tmp.x - dragOffset.x), (int)(tmp.y - dragOffset.y), 0);
 
         DoPathfinding();
     }

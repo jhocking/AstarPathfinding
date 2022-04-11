@@ -6,6 +6,8 @@ using UnityEngine;
 [RequireComponent(typeof(BoxCollider))]
 public class DraggableObject : MonoBehaviour
 {
+    public Vector2 offset = Vector2.zero;
+
     public event Action OnStartDrag;
     public event Action OnEndDrag;
 
@@ -21,7 +23,7 @@ public class DraggableObject : MonoBehaviour
     void Update() {
         if (isDragging) {
             var mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
-            this.transform.position = new Vector3(mousePos.x - .5f, mousePos.y - .5f, 0);
+            this.transform.position = new Vector3(mousePos.x + offset.x, mousePos.y + offset.x, 0);
         }
     }
 
