@@ -34,7 +34,7 @@ public class DemoMain : MonoBehaviour
         blankImage.SetPixel(0, 0, Color.white);
         blankImage.Apply();
         var blankTile = tileObj.AddComponent<SpriteRenderer>();
-        blankTile.sprite = Sprite.Create(blankImage, new Rect(0, 0, 1, 1), Vector2.zero, 1);
+        blankTile.sprite = Sprite.Create(blankImage, new Rect(0, 0, 1, 1), Vector2.zero, 1.05f);
 
         // create tile map
         var mapRoot = new GameObject("Map");
@@ -69,6 +69,7 @@ public class DemoMain : MonoBehaviour
         startTile = Instantiate(blankTile);
         startTile.gameObject.name = "Start";
         var startDrag = startTile.gameObject.AddComponent<DraggableObject>();
+        startDrag.OnStartDrag += DisposeOldPath;
         startDrag.OnEndDrag += PlaceTiles;
         startTile.transform.position = Vector3.zero;
         startTile.color = Color.green;
@@ -76,6 +77,7 @@ public class DemoMain : MonoBehaviour
         endTile = Instantiate(blankTile);
         endTile.gameObject.name = "End";
         var endDrag = endTile.gameObject.AddComponent<DraggableObject>();
+        endDrag.OnStartDrag += DisposeOldPath;
         endDrag.OnEndDrag += PlaceTiles;
         endTile.transform.position = new Vector3(width - 1, height - 1, 0);
         endTile.color = Color.red;
@@ -86,7 +88,7 @@ public class DemoMain : MonoBehaviour
         pathDot.transform.localScale = new Vector3(.25f, .25f, .25f);
         pathDot.color = Color.grey;
 
-        var pathRoot = new GameObject("Path");
+        pathRoot = new GameObject("Path");
         pathRoot.transform.SetParent(this.transform);
         StartCoroutine(ThreadedDoPathfinding());
 
@@ -129,7 +131,24 @@ public class DemoMain : MonoBehaviour
             yield return null;
         }
 
-        Debug.Log(path?.Count);
+        ConstructNewPath(path);
+    }
+
+    private void DisposeOldPath()
+    {
+        GameObject[] objects = GameObject.FindGameObjectsWithTag("Respawn");
+        foreach (GameObject go in objects)
+        {
+            Destroy(go);
+        }
+    }
+
+    private void ConstructNewPath(List<Vector2Int> path) {
+        foreach (Vector2Int step in path) {
+            var dot = Instantiate(pathDot, pathRoot.transform);
+            dot.gameObject.tag = "Respawn";
+            dot.transform.position = new Vector3(step.x + .35f, step.y + .35f, -1);
+        }
     }
 
 }

@@ -6,6 +6,7 @@ using UnityEngine;
 [RequireComponent(typeof(BoxCollider))]
 public class DraggableObject : MonoBehaviour
 {
+    public event Action OnStartDrag;
     public event Action OnEndDrag;
 
     private bool isDragging;
@@ -27,6 +28,7 @@ public class DraggableObject : MonoBehaviour
     void OnMouseDown()
     {
         isDragging = true;
+        OnStartDrag?.Invoke();
     }
 
     void OnMouseUp()
