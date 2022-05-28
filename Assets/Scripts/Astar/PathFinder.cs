@@ -91,8 +91,8 @@ namespace Astar
 
                     // make sure is a neighboring (not current) node and is on the grid
                     // https://stackoverflow.com/questions/9404683/how-to-get-the-length-of-row-column-of-multidimensional-array-in-c
-                    bool neighbor = only4way ? (i == 0 && j != 0) || (i != 0 && j == 0) : (i != 0 || j != 0); // 4 or 8 way movement?
-                    if (neighbor && (col >= 0 && col < levelData.GetLength(0)) && (row >= 0 && row < levelData.GetLength(1)))
+                    bool isNeighbor = only4way ? (i == 0 && j != 0) || (i != 0 && j == 0) : (i != 0 || j != 0); // 4 or 8 way movement?
+                    if (isNeighbor && (col >= 0 && col < levelData.GetLength(0)) && (row >= 0 && row < levelData.GetLength(1)))
                     {
                         var key = $"{col} {row}";
 
