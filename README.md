@@ -11,3 +11,5 @@ https://gist.github.com/jcward/45afd22560939aaae5c75e68f1e57505
 ---
 
 Unless it's set to WebGL (because threads don't work on that platform), the demo executes the pathfinding process on a separate thread, and wraps the threaded execution in a coroutine. The wrapper has two purposes: so that Unity will keep going while the process runs, and to return the pathfinding result back to the main thread. This library doesn't *have* to be used on new threads, but running pathfinding on separate threads helps your game's performance when there is lots of pathfinding going on.
+
+oh and fyi the path returned is empty (ie. the path's count is 0) if no connection is found between the start and end positions
