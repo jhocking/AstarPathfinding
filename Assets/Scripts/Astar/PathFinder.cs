@@ -128,6 +128,9 @@ namespace Astar
             else
             {
                 RetracePath(endNode);
+
+                // want forward from start, not backward from end
+                Path.Reverse();
             }
         }
         
